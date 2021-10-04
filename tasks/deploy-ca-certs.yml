@@ -30,3 +30,6 @@
     - pem
   tags:
     - dist-certs
+
+# Todo
+# - Only copy files to remote if they are different
