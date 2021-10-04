@@ -1,7 +1,7 @@
 # ansible-create-ca
 Create a certification authority and create/ distribute certificates
 
-`certs_fqdns` variable is a list of domains for which certificates will be created and to which the certificates will be distributed to.
+`certs_fqdns` variable is a list of domains for which certificates will be created and to which the certificates will be deployed (copied) to.
 `inventory_hostname` variable is the host name in the ansible hosts file
 
 ## Example playbook
@@ -25,34 +25,7 @@ Create a certification authority and create/ distribute certificates
   tasks:
     - import_role:
         name: roles/ansible-ca
+```
 
-- hosts: all, !ca
-  become: yes
-  tasks:
 
-    - name: Check /etc/ssl/certs dir exists
-      stat:
-        path: /etc/ssl/certs
-      register: certs_dir
-
-    - name: Create certs dir if missing
-      file: 
-        path: /etc/ssl/certs
-        state: directory
-      when: not certs_dir.stat.exists 
-
-    - name: Distribute certs and keys to nodes
-      copy:
-        src: files/certs/{{inventory_hostname}}.{{item}}
-        dest: /etc/ssl/certs/{{inventory_hostname}}.{{item}}
-      with_items:
-        - key
-        - pem
-      tags:
-        - dist-certs
-
-    - name: Distribute certs and keys to nodes
-      copy:
-        src: files/certs/root.pem
-        dest: /etc/ssl/certs/root.pem
 ```
